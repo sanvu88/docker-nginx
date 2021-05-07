@@ -27,6 +27,8 @@ Hostvn.net Nginx is developed based on the Nginx Docker official, not only inher
 
 <h2>Using:</h2>
 
+<code>docker pull hostvn/hostvn.net-nginx</code>
+
 <code>docker run --name nginx -p 80:80 -p 443:443 -v ${PWD}/web:/usr/share/nginx/html --restart always -d hostvn/hostvn.net-nginx</code>
 
 Also you can refer to how to use here: https://hub.docker.com/_/nginx
