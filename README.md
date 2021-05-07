@@ -11,7 +11,7 @@ Hostvn.net Nginx is developed based on the Nginx Docker official, not only inher
 <h2>Quick reference</h2>
 
 - Maintained by: <a href="https://hostvn.net">Hostvn.net</a>
-- Github:
+- Docker hub: https://hub.docker.com/r/hostvn/hostvn.net-nginx
 - Nginx Official: https://hub.docker.com/_/nginx
 - Nginx Brotli module: https://github.com/google/ngx_brotli
 - Nginx header more module: https://github.com/openresty/headers-more-nginx-module
