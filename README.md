@@ -2,7 +2,7 @@
 <p align="center"><strong><a href="https://hostvn.net">Hostvn.net - Tên miền, Web Hosting, Email, VPS &amp; Dịch vụ lưu trữ Website</a></strong></p>
 <p align="center"> <img src="https://blog.hostvn.net/wp-content/uploads/2020/07/logo-big-2.png" /> </p>
 
-########################################################################################
+#####################################################################################
 
 ## About Hostvn.net Nginx
 
