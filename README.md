@@ -32,3 +32,48 @@ Hostvn.net Nginx is developed based on the Nginx Docker official, not only inher
 <code>docker run --name nginx -p 80:80 -p 443:443 --restart always -v ${PWD}/web:/usr/share/nginx/html -d hostvn/hostvn.net-nginx</code>
 
 Also you can refer to how to use here: https://hub.docker.com/_/nginx
+
+<code>
+
+server {
+
+	listen 80;
+
+	error_log /home/web/logs/error.log;
+
+	server_name example.org www.example.org;
+
+	root /var/www/html;
+
+	index index.php index.html index.htm;
+
+	location / {
+
+		try_files $uri $uri/ /index.php?$args;
+
+	}
+
+	location ~ \.php {
+
+	try_files $uri =404;
+
+	fastcgi_split_path_info ^(.+\.php)(/.+)$;
+
+	fastcgi_index index.php;
+
+	include /etc/nginx/fastcgi_params;
+
+	include /etc/nginx/nginx_limits.conf;
+
+	fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+
+	if (-f $request_filename) {
+
+		fastcgi_pass php:9000;
+
+	}
+
+	include /etc/nginx/extra/security.conf;
+}
+
+</code>
