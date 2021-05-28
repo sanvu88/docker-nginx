@@ -22,7 +22,7 @@ Hostvn.net Nginx is developed based on the Nginx Docker official, not only inher
 
 ## Changes:
 
-- Customize <b>/etc/nginx/nginx.conf</b> file configuration more optimally
+- Customize and Optimize <b>/etc/nginx/nginx.conf</b> file configuration more optimally
 - Add module ngx_brotli
 - Add module ngx_headers_more
 - Add the security configuration file at: <b>/etc/nginx/extra/security.conf</b>
