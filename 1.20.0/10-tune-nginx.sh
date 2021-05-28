@@ -1,16 +1,4 @@
 #!/bin/sh
-
-#docker run --name nginx -p 80:80 -p 443:443 --restart always -d hostvn.net/nginx:1.20.0
-
-# nano /etc/docker/daemon.json
-
-#{
-#    "insecure-registries": ["54.255.151.8:5000"]
-#}
-
-#docker pull 54.255.151.8:5000/hostvn.net/nginx:1.20.0
-#docker run --name nginx -p 80:80 -p 443:443 --restart always -d 54.255.151.8:5000/hostvn.net/nginx:1.20.0
-
 set -e
 
 #IPADDRESS=$(curl -s http://cyberpanel.sh/?ip)
@@ -46,22 +34,14 @@ LimitNOFILE=65535
 WantedBy=multi-user.target
 END
 
-if [ ! -d /etc/nginx ]; then
-    mkdir -p etc/nginx
-fi
+#apt update -y
+#apt install --no-install-recommends --no-install-suggests wget -y
+#
+#wget https://scripts.hostvn.net/ngx_brotli/1.20.0/ngx_http_brotli_filter_module.so -P /etc/nginx/modules
+#wget https://scripts.hostvn.net/ngx_brotli/1.20.0/ngx_http_brotli_static_module.so -P /etc/nginx/modules
+#wget https://scripts.hostvn.net/ngx_brotli/1.20.0/ngx_http_headers_more_filter_module.so -P /etc/nginx/modules
 
-if [ ! -d /etc/nginx/modules ]; then
-    mkdir -p /etc/nginx/modules
-fi
-
-apt update -y
-apt install --no-install-recommends --no-install-suggests wget -y
-
-wget https://scripts.hostvn.net/ngx_brotli/1.20.0/ngx_http_brotli_filter_module.so -P /etc/nginx/modules
-wget https://scripts.hostvn.net/ngx_brotli/1.20.0/ngx_http_brotli_static_module.so -P /etc/nginx/modules
-wget https://scripts.hostvn.net/ngx_brotli/1.20.0/ngx_http_headers_more_filter_module.so -P /etc/nginx/modules
-
-apt-get remove --purge --auto-remove -y
+#apt-get remove --purge --auto-remove -y
 
 #worker_connections=$(grep -w "worker_connections" $NGINX_CONFIG_FILE)
 
@@ -148,137 +128,6 @@ http {
 }
 END
 
-cat > "/etc/nginx/gzip.conf" << END
-##Gzip Compression
-gzip on;
-gzip_static on;
-gzip_disable msie6;
-gzip_vary on;
-gzip_proxied any;
-gzip_comp_level 2;
-gzip_buffers 16 8k;
-gzip_http_version 1.1;
-gzip_min_length 256;
-gzip_types
-    application/atom+xml
-    application/geo+json
-    application/javascript
-    application/json
-    application/ld+json
-    application/manifest+json
-    application/rdf+xml
-    application/rss+xml
-    application/vnd.ms-fontobject
-    application/wasm
-    application/x-font-opentype
-    application/x-font-truetype
-    application/x-font-ttf
-    application/x-javascript
-    application/x-web-app-manifest+json
-    application/xhtml+xml
-    application/xml
-    application/xml+rss
-    font/eot
-    font/opentype
-    font/otf
-    image/bmp
-    image/svg+xml
-    image/vnd.microsoft.icon
-    image/x-icon
-    image/x-win-bitmap
-    text/cache-manifest
-    text/calendar
-    text/css
-    text/javascript
-    text/markdown
-    text/plain
-    text/vcard
-    text/vnd.rim.location.xloc
-    text/vtt
-    text/x-component
-    text/x-cross-domain-policy
-    text/xml;
-END
-
-cat > "/etc/nginx/brotli.conf" << END
-##Brotli Compression
-brotli on;
-brotli_static on;
-brotli_buffers 16 8k;
-brotli_comp_level 5;
-brotli_types
-    application/atom+xml
-    application/geo+json
-    application/javascript
-    application/json
-    application/ld+json
-    application/manifest+json
-    application/rdf+xml
-    application/rss+xml
-    application/vnd.ms-fontobject
-    application/wasm
-    application/x-font-opentype
-    application/x-font-truetype
-    application/x-font-ttf
-    application/x-javascript
-    application/x-web-app-manifest+json
-    application/xhtml+xml
-    application/xml
-    application/xml+rss
-    font/eot
-    font/opentype
-    font/otf
-    image/bmp
-    image/svg+xml
-    image/vnd.microsoft.icon
-    image/x-icon
-    image/x-win-bitmap
-    text/cache-manifest
-    text/calendar
-    text/css
-    text/javascript
-    text/markdown
-    text/plain
-    text/vcard
-    text/vnd.rim.location.xloc
-    text/vtt
-    text/x-component
-    text/x-cross-domain-policy
-    text/xml;
-END
-
-cat > "/etc/nginx/ssl.conf" << END
-# SSL
-ssl_session_timeout  1d;
-ssl_session_cache    shared:SSL:300m;
-ssl_session_tickets  off;
-
-# Diffie-Hellman parameter for DHE ciphersuites
-ssl_dhparam /etc/nginx/certs/dhparams.pem;
-
-# Mozilla Intermediate configuration
-ssl_protocols        TLSv1.2 TLSv1.3;
-ssl_ciphers          ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:DHE-RSA-AES128-GCM-SHA256:DHE-RSA-AES256-GCM-SHA384;
-
-# OCSP Stapling
-#ssl_stapling         on;
-#ssl_stapling_verify  on;
-resolver             1.1.1.1 1.0.0.1 8.8.8.8 8.8.4.4 208.67.222.222 208.67.220.220 valid=10m;
-resolver_timeout     10s;
-END
-
-cat >"/etc/nginx/nginx_limits.conf" <<EOCF
-fastcgi_connect_timeout 60;
-fastcgi_buffer_size 128k;
-fastcgi_buffers 256 16k;
-fastcgi_busy_buffers_size 256k;
-fastcgi_temp_file_write_size 256k;
-fastcgi_send_timeout 600;
-fastcgi_read_timeout 600;
-fastcgi_intercept_errors on;
-fastcgi_param HTTP_PROXY "";
-EOCF
-
 cat > "/etc/nginx/cloudflare.conf" <<END
 real_ip_header X-Forwarded-For;
 END
@@ -295,76 +144,22 @@ set_real_ip_from $ipv6;
 EOcf_ipv6
     done
 
-mkdir -p "$SELF_SIGNED_DIR"
+#mkdir -p "$SELF_SIGNED_DIR"
+#
+#if [ -f /etc/nginx/certs/dhparams.pem ]; then
+#    rm -rf /etc/nginx/certs/dhparams.pem
+#fi
 
-if [ -f /etc/nginx/certs/dhparams.pem ]; then
-    rm -rf /etc/nginx/certs/dhparams.pem
-fi
-
-if [ -d "$SELF_SIGNED_DIR}" ]; then
-    openssl dhparam -out "$SELF_SIGNED_DIR"/dhparams.pem 2048
+#if [ -d "$SELF_SIGNED_DIR}" ]; then
+#    openssl dhparam -out "$SELF_SIGNED_DIR"/dhparams.pem 2048
 #    openssl genrsa -out "$SELF_SIGNED_DIR/server.key" 4096
 #    openssl req -new -key "$SELF_SIGNED_DIR/server.key" \
 #        -out "$SELF_SIGNED_DIR/server.csr" -subj "/C=VN/ST=Caugiay/L=Hanoi/O=Hostvn/OU=IT Department/CN=${IPADDRESS}"  > /dev/null
 #    openssl x509 -in "$SELF_SIGNED_DIR/server.csr" -out "$SELF_SIGNED_DIR/server.crt" \
 #        -req -signkey "$SELF_SIGNED_DIR/server.key" -days 3650
-fi
+#fi
 
 mkdir -p /etc/nginx/extra
-
-cat >"/etc/nginx/extra/security.conf" <<EOsecurity
-location ^~ /GponForm/ { deny all; access_log off; log_not_found off; }
-location ^~ /GponForm/diag_Form { deny all; access_log off; log_not_found off; }
-location ^~ /vendor/phpunit/ { deny all; access_log off; log_not_found off; }
-# Return 403 forbidden for readme.(txt|html) or license.(txt|html) or example.(txt|html) or other common git repository files
-location ~*  "/(^\$|readme|license|example|LICENSE|README|LEGALNOTICE|INSTALLATION|CHANGELOG)\.(txt|html|md)" {
-    deny all;
-}
-location ~ ^/(\.user.ini|\.htaccess|\.htpasswd|\.user\.ini|\.ht|\.env|\.git|\.svn|\.project) {
-    deny all;
-    access_log off;
-    log_not_found off;
-}
-# Deny backup extensions & log files and return 403 forbidden
-location ~* "\.(love|error|kid|cgi|old|orig|original|php#|php~|php_bak|save|swo|aspx?|tpl|sh|bash|bak?|cfg|cgi|dll|exe|git|hg|ini|jsp|log|mdb|out|sql|svn|swp|tar|rdf|gz|zip|bz2|7z|pem|asc|conf|dump)\$" {
-    deny all;
-    access_log off;
-    log_not_found off;
-}
-# Disable XML-RPC
-location = /xmlrpc.php { deny all; access_log off; log_not_found off; }
-if (\$request_method !~ ^(GET|HEAD|POST)$ ) { return 405; }
-rewrite /wp-admin$ \$scheme://\$host\$uri/ permanent;
-
-location /wp-includes/{
-    location ~ \.(gz|tar|bzip2|7z|php|php5|php7|log|error|py|pl|kid|love|cgi)\$ { deny all; }
-}
-location /wp-content/uploads {
-    location ~ \.(gz|tar|bzip2|7z|php|php5|php7|log|error|py|pl|kid|love|cgi)\$ { deny all; }
-}
-location /wp-content/updraft { deny all; access_log off; log_not_found off; }
-location /wp-content/backups-dup-pro { deny all; access_log off; log_not_found off; }
-location /wp-snapshots { deny all; access_log off; log_not_found off; }
-location /wp-content/uploads/sucuri { deny all; access_log off; log_not_found off; }
-location /wp-content/uploads/nginx-helper { deny all; access_log off; log_not_found off; }
-location = /wp-config.php { deny all; access_log off; log_not_found off; }
-location = /wp-links-opml.php { deny all; access_log off; log_not_found off; }
-location = /wp-config-sample.php { deny all; access_log off; log_not_found off; }
-location = /readme.html { deny all; access_log off; log_not_found off; }
-location = /license.txt { deny all; access_log off; log_not_found off; }
-
-# enable gzip on static assets - php files are forbidden
-location /wp-content/cache {
-# Cache css & js files
-    location ~* \.(?:css(\.map)?|js(\.map)?|.html)\$ {
-        add_header Access-Control-Allow-Origin *;
-        access_log off;
-        log_not_found off;
-        expires 365d;
-    }
-    location ~ \.php\$ { deny all; access_log off; log_not_found off; }
-}
-EOsecurity
 
 cat > "/etc/nginx/conf.d/default.conf" << END
 server {

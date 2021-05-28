@@ -114,6 +114,27 @@ RUN chmod +x /docker-entrypoint.d/10-tune-nginx.sh
 RUN chmod +x /docker-entrypoint.d/20-envsubst-on-templates.sh
 RUN chmod +x /docker-entrypoint.d/30-tune-worker-processes.sh
 
+RUN mkdir -p /etc/nginx/modules
+COPY modules/ngx_http_brotli_filter_module.so /etc/nginx/modules
+COPY modules/ngx_http_brotli_static_module.so /etc/nginx/modules
+COPY modules/ngx_http_headers_more_filter_module.so /etc/nginx/modules
+
+COPY config/gzip.conf /etc/nginx
+COPY config/brotli.conf /etc/nginx
+COPY config/ssl.conf /etc/nginx
+COPY config/nginx_limits.conf /etc/nginx
+
+RUN mkdir -p /etc/nginx/extra
+
+COPY config/block.conf /etc/nginx/extra
+COPY config/security.conf /etc/nginx/extra
+
+RUN mkdir -p /etc/nginx/certs
+COPY certs/server.crt /etc/nginx/certs
+COPY certs/server.csr /etc/nginx/certs
+COPY certs/server.key /etc/nginx/certs
+RUN openssl dhparam -out /etc/nginx/certs/dhparams.pem 2048
+
 ENTRYPOINT ["/docker-entrypoint.sh"]
 
 EXPOSE 80
