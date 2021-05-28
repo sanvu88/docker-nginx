@@ -13,7 +13,7 @@
 
 set -e
 
-IPADDRESS=$(curl -s http://cyberpanel.sh/?ip)
+#IPADDRESS=$(curl -s http://cyberpanel.sh/?ip)
 CPU_CORES=$(grep -c "processor" /proc/cpuinfo)
 MAX_CLIENT=$((CPU_CORES * 1024))
 
@@ -267,7 +267,7 @@ resolver             1.1.1.1 1.0.0.1 8.8.8.8 8.8.4.4 208.67.222.222 208.67.220.2
 resolver_timeout     10s;
 END
 
-cat >>"/etc/nginx/nginx_limits.conf" <<EOCF
+cat >"/etc/nginx/nginx_limits.conf" <<EOCF
 fastcgi_connect_timeout 60;
 fastcgi_buffer_size 128k;
 fastcgi_buffers 256 16k;
@@ -312,7 +312,7 @@ fi
 
 mkdir -p /etc/nginx/extra
 
-cat >>"/etc/nginx/extra/security.conf" <<EOsecurity
+cat >"/etc/nginx/extra/security.conf" <<EOsecurity
 location ^~ /GponForm/ { deny all; access_log off; log_not_found off; }
 location ^~ /GponForm/diag_Form { deny all; access_log off; log_not_found off; }
 location ^~ /vendor/phpunit/ { deny all; access_log off; log_not_found off; }

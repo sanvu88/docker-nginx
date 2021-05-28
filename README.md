@@ -33,47 +33,29 @@ Hostvn.net Nginx is developed based on the Nginx Docker official, not only inher
 
 Also you can refer to how to use here: https://hub.docker.com/_/nginx
 
-<code>
-
+```html
 server {
+    listen 80;
+    error_log /home/web/logs/error.log;
+    server_name example.org www.example.org;
+    root /var/www/html;
+    index index.php index.html index.htm;
+    location / {
+        try_files $uri $uri/ /index.php?$args;
+    }
 
-	listen 80;
+    location ~ \.php {
+        try_files $uri =404;
+        fastcgi_split_path_info ^(.+\.php)(/.+)$;
+        fastcgi_index index.php;
+        include /etc/nginx/fastcgi_params;
+        include /etc/nginx/nginx_limits.conf;
+        fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+        if (-f $request_filename) {
+            fastcgi_pass php:9000;
+        }
+    }
 
-	error_log /home/web/logs/error.log;
-
-	server_name example.org www.example.org;
-
-	root /var/www/html;
-
-	index index.php index.html index.htm;
-
-	location / {
-
-		try_files $uri $uri/ /index.php?$args;
-
-	}
-
-	location ~ \.php {
-
-	try_files $uri =404;
-
-	fastcgi_split_path_info ^(.+\.php)(/.+)$;
-
-	fastcgi_index index.php;
-
-	include /etc/nginx/fastcgi_params;
-
-	include /etc/nginx/nginx_limits.conf;
-
-	fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
-
-	if (-f $request_filename) {
-
-		fastcgi_pass php:9000;
-
-	}
-
-	include /etc/nginx/extra/security.conf;
+    include /etc/nginx/extra/security.conf;
 }
-
-</code>
+```

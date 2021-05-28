@@ -108,6 +108,12 @@ COPY 10-listen-on-ipv6-by-default.sh /docker-entrypoint.d
 COPY 10-tune-nginx.sh /docker-entrypoint.d
 COPY 20-envsubst-on-templates.sh /docker-entrypoint.d
 COPY 30-tune-worker-processes.sh /docker-entrypoint.d
+RUN chmod +x /docker-entrypoint.sh
+RUN chmod +x /docker-entrypoint.d/10-listen-on-ipv6-by-default.sh
+RUN chmod +x /docker-entrypoint.d/10-tune-nginx.sh
+RUN chmod +x /docker-entrypoint.d/20-envsubst-on-templates.sh
+RUN chmod +x /docker-entrypoint.d/30-tune-worker-processes.sh
+
 ENTRYPOINT ["/docker-entrypoint.sh"]
 
 EXPOSE 80
