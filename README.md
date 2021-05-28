@@ -43,6 +43,8 @@ docker run --name nginx -p 80:80 -p 443:443 --restart always -v ${PWD}/web:/usr/
 
 Also you can refer to how to use here: https://hub.docker.com/_/nginx
 
+## Vhost Example
+
 ```html
 server {
     listen 80;
