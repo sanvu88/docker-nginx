@@ -48,7 +48,7 @@ Also you can refer to how to use here: https://hub.docker.com/_/nginx
 ```html
 server {
     listen 80;
-    error_log /home/web/logs/error.log;
+    error_log /root/web/logs/error.log;
     server_name example.org www.example.org;
     root /usr/share/nginx/html;
     index index.php index.html index.htm;
