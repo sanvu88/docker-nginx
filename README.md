@@ -38,7 +38,7 @@ docker pull hostvn/hostvn.net-nginx
 ```
 
 ```html
-docker run --name nginx -p 80:80 -p 443:443 --restart always -v ${PWD}/web:/usr/share/nginx/html -d hostvn/hostvn.net-nginx
+docker run --name nginx -p 80:80 -p 443:443 --restart always -v /root/web:/usr/share/nginx/html -d hostvn/hostvn.net-nginx
 ```
 
 Also you can refer to how to use here: https://hub.docker.com/_/nginx
@@ -50,7 +50,7 @@ server {
     listen 80;
     error_log /home/web/logs/error.log;
     server_name example.org www.example.org;
-    root /var/www/html;
+    root /usr/share/nginx/html;
     index index.php index.html index.htm;
     location / {
         try_files $uri $uri/ /index.php?$args;
